@@ -1,0 +1,13 @@
+<domain type='xen'>
+  <name>clickos</name>
+  <os>
+    <type>linux</type>
+    <kernel>.neat/assets/clickos_x86_64</kernel>
+  </os>
+  <memory unit='GiB'>1</memory>
+  <vcpu>1</vcpu>
+  <on_poweroff>destroy</on_poweroff>
+  <devices>
+    <emulator>/usr/bin/qemu-system-x86_64</emulator>
+  </devices>
+</domain>

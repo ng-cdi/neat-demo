@@ -1,0 +1,32 @@
+testbeds:
+  - name: doublestar
+    variant: mtv
+    resource_cap: true
+    config:
+      image: ghcr.io/ng-cdi/mtv:test
+      files: .neat/assets
+      command: "--switch ovsk"
+      libvirt: true
+    post_start_script: ./.neat/assets/start-routers.sh
+
+tests:
+  - name: h1 connect h3
+    variant: ping
+    testbeds:
+      - doublestar
+    config:
+      sender: h1
+      target: h3
+      count: 5
+      interval: 0.5
+    expression: Sent == Received
+  - name: h4 connect h3
+    variant: ping
+    testbeds:
+      - doublestar
+    config:
+      sender: h4
+      target: h3
+      count: 5
+      interval: 0.5
+    expression: Sent == Received

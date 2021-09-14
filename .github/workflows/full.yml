@@ -1,0 +1,44 @@
+name: ClickOS Switch Demo
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build-clickos:
+    name: Build the ClickOS binary
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Extract Repo Owner
+        shell: bash
+        run: echo "##[set-output name=owner;]$(echo ${GITHUB_REPOSITORY%%/*} | tr '[:upper:]' '[:lower:]')"
+        id: extract_owner
+      - name: Build Docker Image
+        run: |
+          docker build --rm -f Dockerfile -t ghcr.io/${{ steps.extract_owner.outputs.owner }}/clickos:switch .
+      - name: Extract Binary
+        run: |
+          docker run --rm -v $(pwd)/.neat/assets:/output --name clickos-switch ghcr.io/${{ steps.extract_owner.outputs.owner }}/clickos:switch
+      - name: Upload Binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: clickos-binary
+          path: ./.neat/assets/clickos_x86_64
+
+  test-switch:
+    name: Test ClickOS Switch
+    needs: build-clickos
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download ClickOS Binary
+        uses: actions/download-artifact@v2
+        with:
+          name: clickos-binary
+          path: .neat/assets/
+      - name: Run NEAT Tests
+        run: |
+          neat -v trace compose
