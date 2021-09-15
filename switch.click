@@ -21,7 +21,7 @@ fd0 -> Print('IN0') -> in_supp0 -> [0]switch;
 switch[0] -> out_supp0 -> q0;
 
 fd1 -> Print('IN1') -> in_supp1 -> [1]switch;
-switch[1] -> out_supp1 -> q1;
+switch[1] -> out_supp1 -> q0;
 
 fd2 -> Print('IN2') -> in_supp2 -> [2]switch;
-switch[2] -> out_supp2 -> q2;
+switch[2] -> out_supp2 -> q0;
