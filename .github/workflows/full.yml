@@ -39,6 +39,9 @@ jobs:
         with:
           name: clickos-binary
           path: .neat/assets/
+      - name: Fix Paths
+        run: |
+          xmlstarlet ed -u '/domain/os/kernel' -v $(pwd)/$(xmlstarlet sel -T -t -m '//kernel' -v . -n .neat/assets/libvirt.xml)  <.neat/assets/libvirt.xml >.neat/assets/updated.xml && mv .neat/assets/updated.xml .neat/assets/libvirt.xml
       - name: Run NEAT Tests
         run: |
           neat -v trace compose
