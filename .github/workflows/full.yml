@@ -45,3 +45,25 @@ jobs:
       - name: Run NEAT Tests
         run: |
           neat -v trace compose
+      - name: 'Sending Failure SMS Notification'
+        uses: twilio-labs/actions-sms@v1
+        if: failure()
+        with:
+          fromPhoneNumber: ${{ secrets.TWILIO_PHONE_NUMBER }}
+          toPhoneNumber: ${{ secrets.MY_PHONE_NUMBER }}
+          message: 'The ClickOS Switch Configuration update failed. Check Github.'
+        env:
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_API_KEY: ${{ secrets.TWILIO_API_KEY }}
+          TWILIO_API_SECRET: ${{ secrets.TWILIO_API_SECRET }}
+      - name: 'Sending Success SMS Notification'
+        uses: twilio-labs/actions-sms@v1
+        if: success()
+        with:
+          fromPhoneNumber: ${{ secrets.TWILIO_PHONE_NUMBER }}
+          toPhoneNumber: ${{ secrets.MY_PHONE_NUMBER }}
+          message: 'The ClickOS etherswitch configuration was successfully updated'
+        env:
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_API_KEY: ${{ secrets.TWILIO_API_KEY }}
+          TWILIO_API_SECRET: ${{ secrets.TWILIO_API_SECRET }}
